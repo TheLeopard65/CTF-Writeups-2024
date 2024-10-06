@@ -1,6 +1,10 @@
-#IRON CTF 2024 (Online Jeopardy CTF)
+# IRON CTF 2024 (Online Jeopardy CTF)
 
-Here are the challanges that i solved in this competition.
+<div align="center">
+    ![image](https://github.com/user-attachments/assets/21e914c3-1573-4f14-862c-a2f98d44a225)
+</div>
+
+Here are the challenges that I solved in this competition.
 
 ### Welcome
 
@@ -8,8 +12,11 @@ The flag was already posted on the discord Rules section:
 ![image](https://github.com/user-attachments/assets/734480ab-4b68-4be2-97d8-6ec051e638c0)
 
 ### Introspection
-![image](https://github.com/user-attachments/assets/e1657ecf-12f4-4de4-9465-77d1bcd140c5)
-They provided us with a ELF file, C++ Sorce file and a Fake Flag file
+<div align="center">
+    <img src="https://github.com/user-attachments/assets/e1657ecf-12f4-4de4-9465-77d1bcd140c5" alt="Introspection" />
+</div>
+
+They provided us with an ELF file, a C++ Sorce file, and a Fake Flag file
 ```
 ┌──(kali㉿LEOPARD-PC)-[~/ironCTF/introspection-COMPLETED]
 └─$ ls -al
@@ -53,9 +60,11 @@ I wish for you that you get To become a good reverse-engineer and pwner one day
 ```
 
 After analyzing the file in Ghidra, I realized I could get the flag by simply overflowing the input buffer since the flag variable is right above the input variable in the stack:
-![image](https://github.com/user-attachments/assets/2a1f5e6a-bbc0-409f-a6be-36935d5d2a98)
+<div align="center">
+    <img src="https://github.com/user-attachments/assets/2a1f5e6a-bbc0-409f-a6be-36935d5d2a98" alt="Ghidra Analysis" />
+</div>
 
-``` C
+```
 undefined8 main(void){
   undefined input [1008];
   undefined file_data [56];
@@ -79,7 +88,7 @@ undefined8 main(void){
 }
 ```
 
-So i started a new solve.py file with nano and wrote this script with the pwntools library, to get the buffer overflow:
+So I started a new solve.py file with nano and wrote this script with the pwntools library, to get the buffer overflow:
 ```
 ┌──(kali㉿LEOPARD-PC)-[~/ironCTF/introspection-COMPLETED]
 └─$ cat solve.py
@@ -95,7 +104,7 @@ io.sendline(payload)
 io.interactive()
 ```
 
-Here is the Otpt of the script:
+Here is the Output of the script:
 ```
 ┌──(kali㉿LEOPARD-PC)-[~/ironCTF/introspection-COMPLETED]
 └─$ python3 solve.py
