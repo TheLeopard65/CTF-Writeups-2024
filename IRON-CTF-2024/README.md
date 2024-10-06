@@ -11,10 +11,13 @@ Here are the challenges that I solved in this competition.
 
 ---
 ## Welcome
+<div align="center">
+    <img src="https://github.com/user-attachments/assets/dff3aa28-83c7-4e13-9fab-0dd2a8bdd149" alt="Welcome" />
+</div>
 
 The flag was already posted on the discord Rules section:
 <div align="center">
-    <img src="https://github.com/user-attachments/assets/734480ab-4b68-4be2-97d8-6ec051e638c0" alt="TEAM RANKINGS" />
+    <img src="https://github.com/user-attachments/assets/734480ab-4b68-4be2-97d8-6ec051e638c0" alt="Discord" />
 </div>
 
 ### FLAG = `ironCTF{W3lc0m3_t0_ir0nCTF_2024}`
