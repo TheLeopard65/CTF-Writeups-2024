@@ -1,16 +1,19 @@
-# IRON CTF 2024 (Online Jeopardy CTF)
-
 <div align="center">
+    <h1>IRON CTF 2024 (Online Jeopardy CTF)<h1>
     <img src="https://github.com/user-attachments/assets/21e914c3-1573-4f14-862c-a2f98d44a225" alt="TEAM RANKINGS" />
 </div>
 
 Here are the challenges that I solved in this competition.
-
-### Welcome
+---
+## Welcome
 
 The flag was already posted on the discord Rules section:
-![image](https://github.com/user-attachments/assets/734480ab-4b68-4be2-97d8-6ec051e638c0)
+<div align="center">
+    <img src="https://github.com/user-attachments/assets/734480ab-4b68-4be2-97d8-6ec051e638c0" alt="TEAM RANKINGS" />
+</div>
 
+### FLAG = `ironCTF{W3lc0m3_t0_ir0nCTF_2024}`
+---
 ### Introspection
 <div align="center">
     <img src="https://github.com/user-attachments/assets/e1657ecf-12f4-4de4-9465-77d1bcd140c5" alt="Introspection" />
