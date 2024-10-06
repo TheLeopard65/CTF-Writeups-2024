@@ -4,6 +4,7 @@
 </div>
 
 Here are the challenges that I solved in this competition.
+
 ---
 ## Welcome
 
@@ -123,4 +124,35 @@ $ w
 ```
 
 ### FLAG = `ironCTF{W0w!_Y0u_Just_OverWrite_the_Nul1!}`
+
 ---
+
+## Math gone Wrong
+<div align="center">
+    <img src="https://github.com/user-attachments/assets/aead698d-9df1-4136-a5a7-ce7ed73d4c08" alt="Math Gone Wrong" />
+</div>
+
+When we connect to the Netcat Instance, It simply prompts us to enter two numbers and then based on a condition gives us the flag:
+
+```
+┌──(kali㉿LEOPARD-PC)-[~/ironCTF/Algebra-Math-COMPLETED]
+└─$ nc misc.1nf1n1ty.team 30011
+Enter frist number (n1) > 1
+Enter second number (n2) > 2
+n1*10+n2*10 != (n1+n2)*10
+above condition is false so no flag
+```
+
+After playing around for i realized the numbers taken as input are being interpreted as integers, So I tried using float values, and I was right:
+
+```
+┌──(kali㉿LEOPARD-PC)-[~/ironCTF/Algebra-Math-COMPLETED]
+└─$ cat solve
+┌──(kali㉿LEOPARD-PC)-[~/ironCTF]
+└─$ nc misc.1nf1n1ty.team 30011
+Enter frist number (n1) > 0.656565
+Enter second number (n2) > 0.4686546
+b'ironCTF{s1mpl3_r3m4ind3r_70_b3w4r3_0f_fl047ing_p0in7_3rr0r}'
+```
+
+### FLAG = `ironCTF{s1mpl3_r3m4ind3r_70_b3w4r3_0f_fl047ing_p0in7_3rr0r}`
