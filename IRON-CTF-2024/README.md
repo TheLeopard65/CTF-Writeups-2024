@@ -4,6 +4,10 @@
 </div>
 
 Here are the challenges that I solved in this competition.
+1. [Welcome](#Welcome)
+2. [Introspection](#Introspection)
+3. [Math gone Wrong](#Math-gone-Wrong)
+4. [Random Pixels](#Random-pixels)
 
 ---
 ## Welcome
@@ -146,8 +150,6 @@ above condition is false so no flag
 After playing around for i realized the numbers taken as input are being interpreted as integers, So I tried using float values, and I was right:
 
 ```
-┌──(kali㉿LEOPARD-PC)-[~/ironCTF/Algebra-Math-COMPLETED]
-└─$ cat solve
 ┌──(kali㉿LEOPARD-PC)-[~/ironCTF]
 └─$ nc misc.1nf1n1ty.team 30011
 Enter frist number (n1) > 0.656565
@@ -156,3 +158,155 @@ b'ironCTF{s1mpl3_r3m4ind3r_70_b3w4r3_0f_fl047ing_p0in7_3rr0r}'
 ```
 
 ### FLAG = `ironCTF{s1mpl3_r3m4ind3r_70_b3w4r3_0f_fl047ing_p0in7_3rr0r}`
+
+---
+
+## Random Pixels
+<div align="center">
+    <img src="https://github.com/user-attachments/assets/22290873-8c12-4f57-9be2-0e0a351dd5aa" alt="Random Pixels" />
+</div>
+
+They provided us with a Challenge zip file `chall.zip`. After Unzipping the ZIP file, I got the following files:
+```
+┌──(kali㉿LEOPARD-PC)-[~/ironCTF/Random_Pixels-COMPLETED]
+└─$ ls -l
+total 56
+-rw-r--r-- 1 kali kali 22367 Oct  4 23:56 chal.zip
+-rw-rw-r-- 1 kali kali   583 Sep 29 17:18 enc.py
+-rw-rw-r-- 1 kali kali 22113 Oct  3 02:02 encrypted.png
+```
+
+The encrypted.png looked like this:
+<div align="center">
+    <img src="https://github.com/user-attachments/assets/1562db2b-9d64-4ee0-adcd-7226377e4f5c" alt="Encrypted PNG File" />
+</div>
+
+and the enc.py had the following encryption mechanisms and required a seed to reverse the encryption:
+```
+┌──(kali㉿LEOPARD-PC)-[~/ironCTF/Random_Pixels-COMPLETED]
+└─$ cat enc.py
+import random, time, numpy
+from PIL import Image
+from secret import FLAG
+
+def randomize(img, seed):
+        random.seed(seed)
+        new_y = list(range(img.shape[0]))
+        new_x = list(range(img.shape[1]))
+        random.shuffle(new_y)
+        random.shuffle(new_x)
+
+        new = numpy.empty_like(img)
+        for i, y in enumerate(new_y):
+                for j, x in enumerate(new_x):
+                        new[i][j] = img[y][x]
+        return numpy.array(new)
+
+
+if __name__ == "__main__":
+        with Image.open(FLAG) as f:
+                img = numpy.array(f)
+                out = randomize(img, int(time.time()))
+                image = Image.fromarray(out)
+                image.save("encrypted.png")
+```
+
+Looking more carefully at the code, I noticed it was importing the time library and was the current time as the seed of encryption. I immediately knew what i had to do. I ran exiftool on the PNG file, copied its modification date and with the help of ChatGPT, wrote following script:
+
+```
+┌──(kali㉿LEOPARD-PC)-[~/ironCTF/Random_Pixels-COMPLETED]
+└─$ exiftool encrypted.png
+ExifTool Version Number         : 12.76
+File Name                       : encrypted.png
+Directory                       : .
+File Size                       : 22 kB
+File Modification Date/Time     : 2024:10:03 02:02:40+05:00
+File Access Date/Time           : 2024:10:05 17:40:58+05:00
+File Inode Change Date/Time     : 2024:10:05 12:07:21+05:00
+File Permissions                : -rw-rw-r--
+File Type                       : PNG
+File Type Extension             : png
+MIME Type                       : image/png
+Image Width                     : 300
+Image Height                    : 300
+Bit Depth                       : 8
+Color Type                      : RGB with Alpha
+Compression                     : Deflate/Inflate
+Filter                          : Adaptive
+Interlace                       : Noninterlaced
+Image Size                      : 300x300
+Megapixels                      : 0.090
+```
+
+DECRYPTION SCRIPT:
+```
+┌──(kali㉿LEOPARD-PC)-[~/ironCTF/Random_Pixels-COMPLETED]
+└─$ cat restore.py
+import random
+import numpy
+from PIL import Image
+import time
+import datetime
+
+FILE = "./encrypted.png"
+
+def randomize(img, seed):
+    random.seed(seed)
+    new_y = list(range(img.shape[0]))
+    new_x = list(range(img.shape[1]))
+
+    random.shuffle(new_y)
+    random.shuffle(new_x)
+
+    new = numpy.empty_like(img)
+    for i, y in enumerate(new_y):
+        for j, x in enumerate(new_x):
+            new[i][j] = img[y][x]
+
+    return new, new_y, new_x
+
+def unrandomize(img, new_y, new_x):
+    original = numpy.empty_like(img)
+
+    for i in range(img.shape[0]):
+        for j in range(img.shape[1]):
+            original[new_y[i]][new_x[j]] = img[i][j]
+
+    return original
+
+def estimate_seed(modification_date):
+    # Convert the modification date to a Unix timestamp
+    dt = datetime.datetime.strptime(modification_date, "%Y:%m:%d %H:%M:%S%z")
+    return int(dt.timestamp())
+
+def main():
+    # Load the encrypted image
+    with Image.open(FILE) as f:
+        img = numpy.array(f)
+
+    # Estimated modification date from exiftool output
+    modification_date = "2024:10:03 02:02:40+05:00"
+    seed = estimate_seed(modification_date)
+
+    # Get the shuffle indices
+    height, width = img.shape[0], img.shape[1]
+    new_y, new_x = randomize(numpy.zeros_like(img), seed)[1:3]  # Get new_y and new_x
+
+    # Unrandomize the image
+    restored_image = unrandomize(img, new_y, new_x)
+    restored = Image.fromarray(restored_image)
+    restored.save("restored.png")
+    print("Restored image saved as 'restored.png'.")
+
+if __name__ == "__main__":
+    main()
+```
+
+After running the script i got a QR Code, which had the flag in it:
+<div align="center">
+    <img src="https://github.com/user-attachments/assets/4e184672-c28b-4a60-a327-8d73885e4781" alt="Decryped PNG File" />
+</div>
+
+### FLAG = `ironCTF{p53ud0_r4nd0m_f0r_4_r3450n}`
+
+```
