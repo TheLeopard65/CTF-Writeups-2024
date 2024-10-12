@@ -1,6 +1,6 @@
 <div align="center">
     <h1>IRON CTF 2024 (Online Jeopardy CTF)<h1>
-    <img src="https://github.com/user-attachments/assets/21e914c3-1573-4f14-862c-a2f98d44a225" alt="TEAM RANKINGS" />
+    <img src="IRON-CTF.png" alt="TEAM RANKINGS" />
 </div>
 
 Here are the challenges that I solved in this competition.
